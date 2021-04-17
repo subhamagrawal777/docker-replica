@@ -1,0 +1,125 @@
+server:
+  maxThreads: 256
+  minThreads: 256
+  applicationConnectors:
+  - type: http
+    port: 8080
+  adminConnectors:
+  - type: http
+    port: 8081
+  applicationContextPath: /
+  requestLog:
+    appenders:
+    - type: console
+      timeZone: IST
+
+logging:
+  level: DEBUG
+  # Logger-specific levels.
+  loggers:
+    org.hibernate: ERROR
+
+  appenders:
+  - type: console
+    threshold: INFO                                                         `
+    timeZone: IST
+    logFormat: "%(%-5level) [%date] %X{TRACE-ID} %X{request_id} %X{user_id} [%thread] [%logger{0}]: %message%n"
+
+
+serviceDiscovery:
+  namespace: phonepe
+  environment: stage
+  zookeeper: localhost
+  publishedHost: 127.0.0.1
+  publishedPort: 8080
+  connectionRetryIntervalMillis: 5000
+
+swagger:
+  resourcePackage: com.github.docker.replica.resources
+  title: Docker Replicator
+  description: Service for managing Docker Repositories
+
+hystrixConfig:
+  defaultConfig:
+    threadPool:
+      timeout: 2000
+      concurrency: 10
+  commands:
+    - name: BseClient.ucc
+      threadPool:
+        concurrency: 5
+        timeout: 10000
+
+
+serviceName: docker-replica
+
+aerospikeConfiguration:
+  hostConfigs:
+    - host: localhost
+      port: 3000
+  #  tlsProtocols:
+  #  - TLSv1.2
+  namespace: test
+  #username: mos_rw
+  #password: raeV5iboquei9Koh
+  maxConnectionsPerNode: 2
+  threadPoolSize: 512
+  maxSocketIdle: 4140
+  timeout: 1000
+  retries: 5
+  sleepBetweenRetries: 10
+
+riemann:
+  host: riemann.stage
+  port: 5555
+  prefix: phonepe.stage.docker.replica
+  pollingInterval: 30
+  tags:
+    - docker_replica
+
+#eventIngestionEnabled: false
+#
+#eventIngestorClientConfig:
+#  environment: stage
+#  usingZookeeper: false
+#  host: events.traefik.stg.phonepe.nb6
+#  port: 80
+#  serviceName: dp-ingestion-api
+#  namespace: phonepe
+#  clientType: queued
+#  queuePath: /var/tmp
+#  batchSize: 10
+
+dockerConfigurationMap:
+  DOCKER:
+    clientId: docker
+    usingZookeeper: false
+    serviceName: docker
+    environment: stage
+    host: localhost
+    port: 5000
+    connections: 10
+    idleTimeOutSeconds: 30
+  BLR_DOCKER:
+    clientId: blr-docker
+    usingZookeeper: false
+    serviceName: blr-docker
+    environment: stage
+    host: localhost
+    port: 5000
+    connections: 10
+    idleTimeOutSeconds: 30
+
+
+validationConfig:
+  headerValidationConfig:
+    validateRelativePathValue: false
+    headersVsForbiddenRegexList:
+      X-DEVICE-FINGERPRINT:
+        - \.+\/
+        - \.+\\
+  pathValidationConfig:
+    validateHttpRelativePath: true
+    forbiddenRegexList:
+      - \.+\/
+      - \.+\\
