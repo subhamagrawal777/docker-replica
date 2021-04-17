@@ -5,6 +5,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.phonepe.platform.http.v2.common.HttpConfiguration;
+import com.phonepe.platform.http.v2.discovery.ServiceEndpointProviderFactory;
 import io.appform.dropwizard.discovery.bundle.ServiceDiscoveryBundle;
 import lombok.AllArgsConstructor;
 import org.apache.curator.framework.CuratorFramework;
@@ -25,6 +26,12 @@ public class ConfigurationModule extends AbstractModule {
     @Singleton
     public CuratorFramework provideCuratorFramework() {
         return serviceDiscoveryBundle.getCurator();
+    }
+
+    @Provides
+    @Singleton
+    public ServiceEndpointProviderFactory provideServiceEndpointProviderFactory(final CuratorFramework curatorFramework) {
+        return new ServiceEndpointProviderFactory(curatorFramework);
     }
 
     @Provides

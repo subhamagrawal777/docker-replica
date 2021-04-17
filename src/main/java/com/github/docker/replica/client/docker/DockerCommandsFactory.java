@@ -7,9 +7,9 @@ import com.github.docker.replica.exceptions.ErrorCode;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.phonepe.platform.http.v2.common.HttpConfiguration;
+import com.phonepe.platform.http.v2.discovery.ServiceEndpointProviderFactory;
+import io.dropwizard.setup.Environment;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
-import org.apache.curator.framework.CuratorFramework;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -24,8 +24,9 @@ public class DockerCommandsFactory {
     private Map<DockerSubDomain, DockerCommands> dockerCommandsProviderMap;
 
     @Inject
-    public DockerCommandsFactory(final ObjectMapper objectMapper,
-                                 final CuratorFramework curatorFramework,
+    public DockerCommandsFactory(final ServiceEndpointProviderFactory serviceEndpointProviderFactory,
+                                 final Environment environment,
+                                 final ObjectMapper objectMapper,
                                  final MetricRegistry metricRegistry,
                                  final Map<DockerSubDomain, HttpConfiguration> httpConfigurationMap) {
         dockerCommandsProviderMap = Arrays.stream(DockerSubDomain.values())
@@ -34,10 +35,8 @@ public class DockerCommandsFactory {
                         Function.identity(),
                         dockerSubDomain -> {
                             try {
-                                val provider = new DockerCommandsProvider(httpConfigurationMap.get(dockerSubDomain),
-                                        objectMapper, curatorFramework);
-                                return new DockerCommands(
-                                        provider, objectMapper, metricRegistry);
+                                return new DockerCommands(httpConfigurationMap.get(dockerSubDomain),
+                                        serviceEndpointProviderFactory, environment, objectMapper, metricRegistry);
                             } catch (GeneralSecurityException | IOException e) {
                                 log.error("Error initializing Docker Commands for {}", dockerSubDomain, e);
                                 throw AppException.propagate(e, ErrorCode.INTERNAL_SERVER_ERROR);
