@@ -5,13 +5,26 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.phonepe.platform.http.v2.common.HttpConfiguration;
+import io.appform.dropwizard.discovery.bundle.ServiceDiscoveryBundle;
+import lombok.AllArgsConstructor;
+import org.apache.curator.framework.CuratorFramework;
 
 import java.util.Map;
 
+@AllArgsConstructor
 public class ConfigurationModule extends AbstractModule {
+
+    private final ServiceDiscoveryBundle<AppConfiguration> serviceDiscoveryBundle;
+
 
     @Override
     protected void configure() {
+    }
+
+    @Provides
+    @Singleton
+    public CuratorFramework provideCuratorFramework() {
+        return serviceDiscoveryBundle.getCurator();
     }
 
     @Provides

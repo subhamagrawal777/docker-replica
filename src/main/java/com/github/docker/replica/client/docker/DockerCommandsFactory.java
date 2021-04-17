@@ -8,6 +8,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.phonepe.platform.http.v2.common.HttpConfiguration;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.apache.curator.framework.CuratorFramework;
 
 import java.io.IOException;
@@ -33,10 +34,10 @@ public class DockerCommandsFactory {
                         Function.identity(),
                         dockerSubDomain -> {
                             try {
+                                val provider = new DockerCommandsProvider(httpConfigurationMap.get(dockerSubDomain),
+                                        objectMapper, curatorFramework);
                                 return new DockerCommands(
-                                        new DockerCommandsProvider(httpConfigurationMap.get(dockerSubDomain),
-                                                objectMapper, curatorFramework),
-                                        objectMapper, metricRegistry);
+                                        provider, objectMapper, metricRegistry);
                             } catch (GeneralSecurityException | IOException e) {
                                 log.error("Error initializing Docker Commands for {}", dockerSubDomain, e);
                                 throw AppException.propagate(e, ErrorCode.INTERNAL_SERVER_ERROR);

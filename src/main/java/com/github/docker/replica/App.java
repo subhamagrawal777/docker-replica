@@ -6,7 +6,9 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.github.docker.replica.exceptions.AppExceptionMapper;
 import com.google.inject.Stage;
+import com.hystrix.configurator.core.HystrixConfigurationFactory;
 import com.phonepe.fs.AerospikeCacheBundle;
 import com.phonepe.platform.requestinfo.RequestInfoBundle;
 import com.phonepe.rosey.dwconfig.RoseyConfigSourceProvider;
@@ -38,7 +40,7 @@ import java.util.List;
 public class App extends Application<AppConfiguration> {
 
     private List<String> packageNameList = Collections.singletonList(
-            "com.phonepe.docker"
+            "com.github.docker"
     );
 
     public static void main(String[] args) throws Exception {
@@ -49,6 +51,8 @@ public class App extends Application<AppConfiguration> {
     public void run(AppConfiguration appConfiguration, Environment environment) {
 
         FunctionMetricsManager.initialize("commands", environment.metrics());
+        environment.jersey().register(AppExceptionMapper.class);
+        HystrixConfigurationFactory.init(appConfiguration.getHystrixConfig());
 
     }
 
@@ -97,7 +101,7 @@ public class App extends Application<AppConfiguration> {
         val guiceBundle = GuiceBundle.<AppConfiguration>builder()
                 .enableAutoConfig(packageNameList.toArray(new String[0]))
                 .modules(
-                        new ConfigurationModule()
+                        new ConfigurationModule(serviceDiscoveryBundle)
                 )
                 .configureFromDropwizardBundles()
                 .build(Stage.PRODUCTION);

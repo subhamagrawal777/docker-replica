@@ -185,6 +185,12 @@
             <groupId>com.phonepe.platform</groupId>
             <artifactId>validation-bundle</artifactId>
             <version>1.3.13.6</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.squareup.okhttp3</groupId>
+                    <artifactId>okhttp</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -246,6 +252,12 @@
             <groupId>com.phonepe.platform.http.v2</groupId>
             <artifactId>http-client-all</artifactId>
             <version>${http.client.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>4.9.0</version>
         </dependency>
 
         <dependency>
