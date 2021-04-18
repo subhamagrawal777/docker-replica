@@ -19,15 +19,15 @@ public class AppException extends RuntimeException {
 
 
     public static AppException propagate(Throwable e) {
-        return propagate(e.getLocalizedMessage(), e, ErrorCode.INTERNAL_SERVER_ERROR);
+        return propagate(e, e.getLocalizedMessage(), ErrorCode.INTERNAL_SERVER_ERROR);
     }
 
     public static AppException propagate(Throwable e, ErrorCode errorCode) {
-        return propagate(e.getLocalizedMessage(), e, errorCode);
+        return propagate(e, e.getLocalizedMessage(), errorCode);
     }
 
-    public static AppException propagate(String message,
-                                         Throwable e,
+    public static AppException propagate(Throwable e,
+                                         String message,
                                          ErrorCode errorCode) {
         AppException appException = connectorException(e);
         if (appException != null && appException.getErrorCode() != null) {

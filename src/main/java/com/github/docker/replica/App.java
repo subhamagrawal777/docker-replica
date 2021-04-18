@@ -132,7 +132,6 @@ public class App extends Application<AppConfiguration> {
                 .build());
 
 
-        bootstrap.addBundle(new RequestInfoBundle());
 
         bootstrap.addBundle(new RiemannBundle<AppConfiguration>() {
             @Override
@@ -147,12 +146,12 @@ public class App extends Application<AppConfiguration> {
             }
         });
 
-        bootstrap.addBundle(new ValidationBundle<AppConfiguration>() {
-            @Override
-            public ValidationConfig getValidationConfig(AppConfiguration configuration) {
-                return configuration.getValidationConfig();
-            }
-        });
+//        bootstrap.addBundle(new ValidationBundle<AppConfiguration>() {
+//            @Override
+//            public ValidationConfig getValidationConfig(AppConfiguration configuration) {
+//                return configuration.getValidationConfig();
+//            }
+//        });
     }
 
     private void setMapperProperties(ObjectMapper mapper) {

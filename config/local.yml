@@ -137,15 +137,15 @@ dockerConfigurationMap:
     idleTimeOutSeconds: 30
 
 
-validationConfig:
-  headerValidationConfig:
-    validateRelativePathValue: false
-    headersVsForbiddenRegexList:
-      X-DEVICE-FINGERPRINT:
-        - \.+\/
-        - \.+\\
-  pathValidationConfig:
-    validateHttpRelativePath: true
-    forbiddenRegexList:
-      - \.+\/
-      - \.+\\
+#validationConfig:
+#  headerValidationConfig:
+#    validateRelativePathValue: false
+#    headersVsForbiddenRegexList:
+#      X-DEVICE-FINGERPRINT:
+#        - \.+\/
+#        - \.+\\
+#  pathValidationConfig:
+#    validateHttpRelativePath: true
+#    forbiddenRegexList:
+#      - \.+\/
+#      - \.+\\

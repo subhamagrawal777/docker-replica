@@ -28,5 +28,5 @@ public class DockerGetManifestResponse {
 
     private Object history;
 
-    private Object signature;
+    private Object signatures;
 }
