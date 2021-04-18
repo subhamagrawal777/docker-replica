@@ -61,4 +61,13 @@ public class ConfigurationModule extends AbstractModule {
     public Map<DockerSubDomain, HttpConfiguration> providesDockerConfigurationMap(final AppConfiguration appConfiguration) {
         return appConfiguration.getDockerConfigurationMap();
     }
+
+    @Provides
+    @Singleton
+    @DockerErrorCodeMap
+    public Map<String, ErrorCode> providesDockerServiceErrorCodeMap() {
+        return CommonUtils.getResource(MapperUtils.getMapper(MapperType.JSON),
+                "error_code_mappings/docker_service_error_code_mapping.json", this.getClass(), new TypeReference<Map<String, ErrorCode>>() {
+                });
+    }
 }
