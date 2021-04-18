@@ -1,12 +1,21 @@
 package com.github.docker.replica;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.github.docker.replica.actor.ActorConfiguration;
 import com.github.docker.replica.client.docker.DockerSubDomain;
+import com.github.docker.replica.client.docker.models.DockerErrorCodeMap;
+import com.github.docker.replica.exceptions.ErrorCode;
+import com.github.docker.replica.utils.CommonUtils;
+import com.github.docker.replica.utils.MapperUtils;
+import com.github.docker.replica.utils.models.MapperType;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.phonepe.platform.http.v2.common.HttpConfiguration;
 import com.phonepe.platform.http.v2.discovery.ServiceEndpointProviderFactory;
 import io.appform.dropwizard.discovery.bundle.ServiceDiscoveryBundle;
+import io.github.qtrouper.TrouperBundle;
+import io.github.qtrouper.core.rabbit.RabbitConnection;
 import lombok.AllArgsConstructor;
 import org.apache.curator.framework.CuratorFramework;
 
@@ -16,6 +25,7 @@ import java.util.Map;
 public class ConfigurationModule extends AbstractModule {
 
     private final ServiceDiscoveryBundle<AppConfiguration> serviceDiscoveryBundle;
+    private final TrouperBundle<AppConfiguration> trouperBundle;
 
 
     @Override
@@ -36,7 +46,19 @@ public class ConfigurationModule extends AbstractModule {
 
     @Provides
     @Singleton
-    public Map<DockerSubDomain, HttpConfiguration> providesDockerConfigurationMap(final AppConfiguration serviceConfiguration) {
-        return serviceConfiguration.getDockerConfigurationMap();
+    public RabbitConnection provideRabbitConnection() {
+        return trouperBundle.getRabbitConnection();
+    }
+
+    @Provides
+    @Singleton
+    public ActorConfiguration provideActorConfiguration(final AppConfiguration appConfiguration) {
+        return appConfiguration.getActorConfiguration();
+    }
+
+    @Provides
+    @Singleton
+    public Map<DockerSubDomain, HttpConfiguration> providesDockerConfigurationMap(final AppConfiguration appConfiguration) {
+        return appConfiguration.getDockerConfigurationMap();
     }
 }

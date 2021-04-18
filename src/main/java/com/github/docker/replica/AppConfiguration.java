@@ -1,9 +1,9 @@
 package com.github.docker.replica;
 
+import com.github.docker.replica.actor.ActorConfiguration;
 import com.github.docker.replica.client.docker.DockerSubDomain;
 import com.hystrix.configurator.config.HystrixConfig;
 import com.phonepe.platform.http.v2.common.HttpConfiguration;
-import com.platform.validation.ValidationConfig;
 import io.appform.dropwizard.discovery.bundle.ServiceDiscoveryConfiguration;
 import io.dropwizard.Configuration;
 import io.dropwizard.aerospike.config.AerospikeConfiguration;
@@ -52,6 +52,10 @@ public class AppConfiguration extends Configuration {
 
     @NotNull
     @Valid
-    private ValidationConfig validationConfig;
+    private ActorConfiguration actorConfiguration;
+
+//    @NotNull
+//    @Valid
+//    private ValidationConfig validationConfig;
 
 }

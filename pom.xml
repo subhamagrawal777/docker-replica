@@ -55,7 +55,6 @@
         <hystrix.configurator.version>0.0.8</hystrix.configurator.version>
 
         <http.client.version>2.0.7</http.client.version>
-        <requestinfo.bundle.version>1.3.5-3</requestinfo.bundle.version>
         <dropwizard.oor.version>1.2.2</dropwizard.oor.version>
         <dropwizard.swagger.version>1.0.0-1</dropwizard.swagger.version>
         <zookeeper.version>3.4.12</zookeeper.version>
@@ -198,17 +197,17 @@
             </exclusions>
         </dependency>
 
-        <dependency>
-            <groupId>com.phonepe.platform</groupId>
-            <artifactId>validation-bundle</artifactId>
-            <version>1.3.13.6</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.squareup.okhttp3</groupId>
-                    <artifactId>okhttp</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.phonepe.platform</groupId>-->
+            <!--<artifactId>validation-bundle</artifactId>-->
+            <!--<version>1.3.13.6</version>-->
+            <!--<exclusions>-->
+                <!--<exclusion>-->
+                    <!--<groupId>com.squareup.okhttp3</groupId>-->
+                    <!--<artifactId>okhttp</artifactId>-->
+                <!--</exclusion>-->
+            <!--</exclusions>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>io.dropwizard</groupId>
@@ -258,12 +257,6 @@
             <version>${hystrix.configurator.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.phonepe.platform</groupId>
-            <artifactId>dropwizard-requestinfo-bundle</artifactId>
-            <version>${requestinfo.bundle.version}</version>
-        </dependency>
-
 
         <dependency>
             <groupId>com.phonepe.platform.http.v2</groupId>
@@ -274,13 +267,7 @@
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
-            <version>3.13.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-            <version>4.9.0</version>
+            <version>4.8.1</version>
         </dependency>
 
         <dependency>

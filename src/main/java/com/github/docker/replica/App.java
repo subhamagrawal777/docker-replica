@@ -13,10 +13,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.inject.Stage;
 import com.hystrix.configurator.core.HystrixConfigurationFactory;
 import com.phonepe.fs.AerospikeCacheBundle;
-import com.phonepe.platform.requestinfo.RequestInfoBundle;
 import com.phonepe.rosey.dwconfig.RoseyConfigSourceProvider;
-import com.platform.validation.ValidationBundle;
-import com.platform.validation.ValidationConfig;
 import io.appform.dropwizard.discovery.bundle.ServiceDiscoveryBundle;
 import io.appform.dropwizard.discovery.bundle.ServiceDiscoveryConfiguration;
 import io.appform.functionmetrics.FunctionMetricsManager;
@@ -101,13 +98,21 @@ public class App extends Application<AppConfiguration> {
                 };
         bootstrap.addBundle(serviceDiscoveryBundle);
 
+        val trouperBundle = new TrouperBundle<AppConfiguration>() {
+            @Override
+            public RabbitConfiguration getRabbitConfiguration(AppConfiguration configuration) {
+                return configuration.getRmqConfig();
+            }
+        };
+        bootstrap.addBundle(trouperBundle);
+
         val aerospikeCacheBundle = aerospikeCacheBundle(objectMapper);
         bootstrap.addBundle(aerospikeCacheBundle);
 
         val guiceBundle = GuiceBundle.<AppConfiguration>builder()
                 .enableAutoConfig(packageNameList.toArray(new String[0]))
                 .modules(
-                        new ConfigurationModule(serviceDiscoveryBundle)
+                        new ConfigurationModule(serviceDiscoveryBundle, trouperBundle)
                 )
                 .configureFromDropwizardBundles()
                 .build(Stage.PRODUCTION);
@@ -126,13 +131,6 @@ public class App extends Application<AppConfiguration> {
                 .withApplicationStreamPath("/hystrix.stream")
                 .build());
 
-        val trouperBundle = new TrouperBundle<AppConfiguration>() {
-            @Override
-            public RabbitConfiguration getRabbitConfiguration(AppConfiguration configuration) {
-                return configuration.getRmqConfig();
-            }
-        };
-        bootstrap.addBundle(trouperBundle);
 
         bootstrap.addBundle(new RequestInfoBundle());
 

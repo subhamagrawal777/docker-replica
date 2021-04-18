@@ -86,6 +86,23 @@ rmqConfig:
   threadPoolSize: 20
   sslEnabled: false
 
+actorConfiguration:
+  queueConfigurationMap:
+    POST_BUILD_CALLBACK:
+      queueName: POST_BUILD_CALLBACK
+      consumerAvailable: true
+      namespace: docker-replica
+      concurrency: 10
+      prefetchCount: 1
+      retry:
+        enabled: true
+        ttlMs: 2000
+        maxRetries: 2
+        backOffFactor: 1
+      sideline:
+        enabled: true
+        concurrency: 1
+
 #eventIngestionEnabled: false
 #
 #eventIngestorClientConfig:
