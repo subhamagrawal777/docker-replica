@@ -7,6 +7,9 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.github.docker.replica.exceptions.AppExceptionMapper;
+import com.github.docker.replica.utils.MapperUtils;
+import com.github.docker.replica.utils.models.MapperType;
+import com.google.common.collect.ImmutableMap;
 import com.google.inject.Stage;
 import com.hystrix.configurator.core.HystrixConfigurationFactory;
 import com.phonepe.fs.AerospikeCacheBundle;
@@ -28,6 +31,8 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.federecio.dropwizard.swagger.SwaggerBundle;
 import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration;
+import io.github.qtrouper.TrouperBundle;
+import io.github.qtrouper.core.rabbit.RabbitConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.zapodot.hystrix.bundle.HystrixBundle;
@@ -60,6 +65,7 @@ public class App extends Application<AppConfiguration> {
     public void initialize(Bootstrap<AppConfiguration> bootstrap) {
         val objectMapper = bootstrap.getObjectMapper();
         setMapperProperties(objectMapper);
+        MapperUtils.initialize(ImmutableMap.of(MapperType.JSON, objectMapper));
 
         val localConfig = Boolean.parseBoolean(System.getenv("USE_LOCAL_CONFIG"));
         log.info("Using localconfig --> {}", localConfig);
@@ -119,6 +125,14 @@ public class App extends Application<AppConfiguration> {
                 .disableStreamServletInAdminContext()
                 .withApplicationStreamPath("/hystrix.stream")
                 .build());
+
+        val trouperBundle = new TrouperBundle<AppConfiguration>() {
+            @Override
+            public RabbitConfiguration getRabbitConfiguration(AppConfiguration configuration) {
+                return configuration.getRmqConfig();
+            }
+        };
+        bootstrap.addBundle(trouperBundle);
 
         bootstrap.addBundle(new RequestInfoBundle());
 

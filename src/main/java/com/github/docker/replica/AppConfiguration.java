@@ -9,6 +9,7 @@ import io.dropwizard.Configuration;
 import io.dropwizard.aerospike.config.AerospikeConfiguration;
 import io.dropwizard.riemann.RiemannConfig;
 import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration;
+import io.github.qtrouper.core.rabbit.RabbitConfiguration;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -46,6 +47,8 @@ public class AppConfiguration extends Configuration {
     @NotNull
     @Valid
     private RiemannConfig riemann = new RiemannConfig();
+
+    private RabbitConfiguration rmqConfig;
 
     @NotNull
     @Valid

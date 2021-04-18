@@ -77,6 +77,15 @@ riemann:
   tags:
     - docker_replica
 
+rmqConfig:
+  userName: admin
+  password: admin
+  brokers:
+  - host: localhost
+    port: 5672
+  threadPoolSize: 20
+  sslEnabled: false
+
 #eventIngestionEnabled: false
 #
 #eventIngestorClientConfig:
